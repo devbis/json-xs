@@ -1,15 +1,15 @@
 =head1 NAME
 
-JSON::XS - JSON serialising/deserialising, done correctly and fast
+JSON::XL - JSON serialising/deserialising, done correctly and fast
 
 =encoding utf-8
 
-JSON::XS - 正しくて高速な JSON シリアライザ/デシリアライザ
+JSON::XL - 正しくて高速な JSON シリアライザ/デシリアライザ
            (http://fleur.hio.jp/perldoc/mix/lib/JSON/XS.html)
 
 =head1 SYNOPSIS
 
- use JSON::XS;
+ use JSON::XL;
 
  # exported functions, they croak on error
  # and expect/generate UTF-8
@@ -19,11 +19,11 @@ JSON::XS - 正しくて高速な JSON シリアライザ/デシリアライザ
 
  # OO-interface
 
- $coder = JSON::XS->new->ascii->pretty->allow_nonref;
+ $coder = JSON::XL->new->ascii->pretty->allow_nonref;
  $pretty_printed_unencoded = $coder->encode ($perl_scalar);
  $perl_scalar = $coder->decode ($unicode_json_text);
 
- # Note that JSON version 2.0 and above will automatically use JSON::XS
+ # Note that JSON version 2.0 and above will automatically use JSON::XL
  # if available, at virtually no speed overhead either, so you should
  # be able to just:
  
@@ -38,10 +38,10 @@ primary goal is to be I<correct> and its secondary goal is to be
 I<fast>. To reach the latter goal it was written in C.
 
 Beginning with version 2.0 of the JSON module, when both JSON and
-JSON::XS are installed, then JSON will fall back on JSON::XS (this can be
+JSON::XL are installed, then JSON will fall back on JSON::XL (this can be
 overridden) with no overhead due to emulation (by inheriting constructor
-and methods). If JSON::XS is not available, it will fall back to the
-compatible JSON::PP module as backend, so using JSON instead of JSON::XS
+and methods). If JSON::XL is not available, it will fall back to the
+compatible JSON::PP module as backend, so using JSON instead of JSON::XL
 gives you a portable JSON API that can be fast when you need and doesn't
 require a C compiler when that is a problem.
 
@@ -51,7 +51,7 @@ modules, none of them correctly handle all corner cases, and in most cases
 their maintainers are unresponsive, gone missing, or not listening to bug
 reports for other reasons.
 
-See MAPPING, below, on how JSON::XS maps perl values to JSON values and
+See MAPPING, below, on how JSON::XL maps perl values to JSON values and
 vice versa.
 
 =head2 FEATURES
@@ -99,7 +99,7 @@ stuff). Or you can combine those features in whatever way you like.
 
 =cut
 
-package JSON::XS;
+package JSON::XL;
 
 use common::sense;
 
@@ -127,7 +127,7 @@ Converts the given Perl data structure to a UTF-8 encoded, binary string
 
 This function call is functionally identical to:
 
-   $json_text = JSON::XS->new->utf8->encode ($perl_scalar)
+   $json_text = JSON::XL->new->utf8->encode ($perl_scalar)
 
 Except being faster.
 
@@ -139,7 +139,7 @@ reference. Croaks on error.
 
 This function call is functionally identical to:
 
-   $perl_scalar = JSON::XS->new->utf8->decode ($json_text)
+   $perl_scalar = JSON::XL->new->utf8->decode ($json_text)
 
 Except being faster.
 
@@ -201,15 +201,15 @@ decoding style, within the limits of supported formats.
 
 =over 4
 
-=item $json = new JSON::XS
+=item $json = new JSON::XL
 
-Creates a new JSON::XS object that can be used to de/encode JSON
+Creates a new JSON::XL object that can be used to de/encode JSON
 strings. All boolean flags described below are by default I<disabled>.
 
 The mutators for flags all return the JSON object again and thus calls can
 be chained:
 
-   my $json = JSON::XS->new->utf8->space_after->encode ({a => [1,2]})
+   my $json = JSON::XL->new->utf8->space_after->encode ({a => [1,2]})
    => {"a": [1, 2]}
 
 =item $json = $json->ascii ([$enable])
@@ -235,7 +235,7 @@ The main use for this flag is to produce JSON texts that can be
 transmitted over a 7-bit channel, as the encoded JSON texts will not
 contain any 8 bit characters.
 
-  JSON::XS->new->ascii (1)->encode ([chr 0x10401])
+  JSON::XL->new->ascii (1)->encode ([chr 0x10401])
   => ["\ud801\udc01"]
 
 =item $json = $json->latin1 ([$enable])
@@ -263,7 +263,7 @@ transferring), a rare encoding for JSON. It is therefore most useful when
 you want to store data structures known to contain binary data efficiently
 in files or databases, not when talking to other JSON encoders/decoders.
 
-  JSON::XS->new->latin1->encode (["\x{89}\x{abc}"]
+  JSON::XL->new->latin1->encode (["\x{89}\x{abc}"]
   => ["\x{89}\\u0abc"]    # (perl syntax, U+abc escaped, U+89 not)
 
 =item $json = $json->utf8 ([$enable])
@@ -289,12 +289,12 @@ document.
 Example, output UTF-16BE-encoded JSON:
 
   use Encode;
-  $jsontext = encode "UTF-16BE", JSON::XS->new->encode ($object);
+  $jsontext = encode "UTF-16BE", JSON::XL->new->encode ($object);
 
 Example, decode UTF-32LE-encoded JSON:
 
   use Encode;
-  $object = JSON::XS->new->decode (decode "UTF-32LE", $jsontext);
+  $object = JSON::XL->new->decode (decode "UTF-32LE", $jsontext);
 
 =item $json = $json->pretty ([$enable])
 
@@ -304,7 +304,7 @@ generate the most readable (or most compact) form possible.
 
 Example, pretty-print some simple structure:
 
-   my $json = JSON::XS->new->pretty(1)->encode ({a => [1,2]})
+   my $json = JSON::XL->new->pretty(1)->encode ({a => [1,2]})
    =>
    {
       "a" : [
@@ -446,7 +446,7 @@ JSON object or array.
 Example, encode a Perl scalar as JSON value with enabled C<allow_nonref>,
 resulting in an invalid JSON text:
 
-   JSON::XS->new->allow_nonref->encode ("Hello, World!")
+   JSON::XL->new->allow_nonref->encode ("Hello, World!")
    => "Hello, World!"
 
 =item $json = $json->allow_unknown ([$enable])
@@ -540,7 +540,7 @@ way.
 
 Example, convert all JSON objects into the integer 5:
 
-   my $js = JSON::XS->new->filter_json_object (sub { 5 });
+   my $js = JSON::XL->new->filter_json_object (sub { 5 });
    # returns [5]
    $js->decode ('[{}]')
    # throw an exception because allow_nonref is not enabled
@@ -579,7 +579,7 @@ Example, decode JSON objects of the form C<< { "__widget__" => <id> } >>
 into the corresponding C<< $WIDGET{<id>} >> object:
 
    # return whatever is in $WIDGET{5}:
-   JSON::XS
+   JSON::XL
       ->new
       ->filter_json_single_key_object (__widget__ => sub {
             $WIDGET{ $_[0] }
@@ -688,7 +688,7 @@ so far.
 This is useful if your JSON texts are not delimited by an outer protocol
 and you need to know where the JSON text ends.
 
-   JSON::XS->new->decode_prefix ("[1] the tail")
+   JSON::XL->new->decode_prefix ("[1] the tail")
    => ([], 3)
 
 =back
@@ -705,7 +705,7 @@ using C<decode_prefix> to see if a full JSON object is available, but
 is much more efficient (and can be implemented with a minimum of method
 calls).
 
-JSON::XS will only attempt to parse the JSON text once it is sure it
+JSON::XL will only attempt to parse the JSON text once it is sure it
 has enough text to get a decisive result, using a very simple but
 truly incremental parser. This means that it sometimes won't stop as
 early as the full parser, for example, it doesn't detect mismatched
@@ -749,7 +749,7 @@ lost.
 Example: Parse some JSON arrays/objects in a given string and return
 them.
 
-   my @objs = JSON::XS->new->incr_parse ("[5][7][1,2]");
+   my @objs = JSON::XL->new->incr_parse ("[5][7][1,2]");
 
 =item $lvalue_string = $json->incr_text
 
@@ -797,7 +797,7 @@ not hold true for JSON numbers, however.
 
 For example, is the string C<1> a single JSON number, or is it simply the
 start of C<12>? Or is C<12> a single JSON number, or the concatenation
-of C<1> and C<2>? In neither case you can tell, and this is why JSON::XS
+of C<1> and C<2>? In neither case you can tell, and this is why JSON::XL
 takes the conservative route and disallows this case.
 
 =head2 EXAMPLES
@@ -808,7 +808,7 @@ the start of a string and identify the portion after the JSON object:
 
    my $text = "[1,2,3] hello";
 
-   my $json = new JSON::XS;
+   my $json = new JSON::XL;
 
    my $obj = $json->incr_parse ($text)
       or die "expected JSON object or array at beginning of string";
@@ -828,7 +828,7 @@ with C<telnet>...).
 Here is how you'd do it (it is trivial to write this in an event-based
 manner):
 
-   my $json = new JSON::XS;
+   my $json = new JSON::XL;
 
    # read some data from the socket
    while (sysread $socket, my $buf, 4096) {
@@ -845,7 +845,7 @@ or arrays, all separated by (optional) comma characters (e.g. C<[1],[2],
 and here is where the lvalue-ness of C<incr_text> comes in useful:
 
    my $text = "[1],[2], [3]";
-   my $json = new JSON::XS;
+   my $json = new JSON::XL;
 
    # void context, so no parsing done
    $json->incr_parse ($text);
@@ -864,13 +864,13 @@ JSON array-of-objects, many gigabytes in size, and you want to parse it,
 but you cannot load it into memory fully (this has actually happened in
 the real world :).
 
-Well, you lost, you have to implement your own JSON parser. But JSON::XS
+Well, you lost, you have to implement your own JSON parser. But JSON::XL
 can still help you: You implement a (very simple) array parser and let
 JSON decode the array elements, which are all full JSON objects on their
 own (this wouldn't work if the array elements could be JSON numbers, for
 example):
 
-   my $json = new JSON::XS;
+   my $json = new JSON::XL;
 
    # open the monster
    open my $fh, "<bigfile.json"
@@ -940,7 +940,7 @@ the above example :).
 
 =head1 MAPPING
 
-This section describes how JSON::XS maps Perl values to JSON values and
+This section describes how JSON::XL maps Perl values to JSON values and
 vice versa. These mappings are designed to "do the right thing" in most
 circumstances automatically, preserving round-tripping characteristics
 (what you put in comes out as something equivalent).
@@ -977,7 +977,7 @@ the Perl level, there is no difference between those as Perl handles all
 the conversion details, but an integer may take slightly less memory and
 might represent more values exactly than floating point numbers.
 
-If the number consists of digits only, JSON::XS will try to represent
+If the number consists of digits only, JSON::XL will try to represent
 it as an integer value. If that fails, it will try to represent it as
 a numeric (floating point) value if that is possible without loss of
 precision. Otherwise it will preserve the number as a string value (in
@@ -991,7 +991,7 @@ the JSON number will still be re-encoded as a JSON number).
 
 Note that precision is not accuracy - binary floating point values cannot
 represent most decimal fractions exactly, and when converting from and to
-floating point, JSON::XS only guarantees precision up to but not including
+floating point, JSON::XL only guarantees precision up to but not including
 the least significant bit.
 
 =item true, false
@@ -1036,10 +1036,10 @@ a Perl value.
 
 Perl hash references become JSON objects. As there is no inherent
 ordering in hash keys (or JSON objects), they will usually be encoded
-in a pseudo-random order. JSON::XS can optionally sort the hash keys
+in a pseudo-random order. JSON::XL can optionally sort the hash keys
 (determined by the I<canonical> flag), so the same datastructure will
 serialise to the same JSON text (given same settings and version of
-JSON::XS), but this incurs a runtime overhead and is only rarely useful,
+JSON::XL), but this incurs a runtime overhead and is only rarely useful,
 e.g. when you want to compare some JSON text against another for equality.
 
 =item array references
@@ -1052,7 +1052,7 @@ Other unblessed references are generally not allowed and will cause an
 exception to be thrown, except for references to the integers C<0> and
 C<1>, which get turned into C<false> and C<true> atoms in JSON.
 
-Since C<JSON::XS> uses the boolean model from L<Types::Serialiser>, you
+Since C<JSON::XL> uses the boolean model from L<Types::Serialiser>, you
 can also C<use Types::Serialiser> and then use C<Types::Serialiser::false>
 and C<Types::Serialiser::true> to improve readability.
 
@@ -1067,14 +1067,14 @@ directly if you want.
 
 =item blessed objects
 
-Blessed objects are not directly representable in JSON, but C<JSON::XS>
+Blessed objects are not directly representable in JSON, but C<JSON::XL>
 allows various ways of handling objects. See L<OBJECT SERIALISATION>,
 below, for details.
 
 =item simple scalars
 
 Simple Perl scalars (any scalar that is not a reference) are the most
-difficult objects to encode: JSON::XS will encode undefined scalars as
+difficult objects to encode: JSON::XL will encode undefined scalars as
 JSON C<null> values, scalars that have last been used in a string context
 before encoding as JSON strings, and anything else as number value:
 
@@ -1125,7 +1125,7 @@ tagged values.
 
 =head3 SERIALISATION
 
-What happens when C<JSON::XS> encounters a Perl object depends on the
+What happens when C<JSON::XL> encounters a Perl object depends on the
 C<allow_blessed>, C<convert_blessed> and C<allow_tags> settings, which are
 used in this order:
 
@@ -1133,7 +1133,7 @@ used in this order:
 
 =item 1. C<allow_tags> is enabled and the object has a C<FREEZE> method.
 
-In this case, C<JSON::XS> uses the L<Types::Serialiser> object
+In this case, C<JSON::XL> uses the L<Types::Serialiser> object
 serialisation protocol to create a tagged JSON value, using a nonstandard
 extension to the JSON syntax.
 
@@ -1184,7 +1184,7 @@ The object will be serialised as a JSON null value.
 =item 4. none of the above
 
 If none of the settings are enabled or the respective methods are missing,
-C<JSON::XS> throws an exception.
+C<JSON::XL> throws an exception.
 
 =back
 
@@ -1201,7 +1201,7 @@ This section only considers the tagged value case: I a tagged JSON object
 is encountered during decoding and C<allow_tags> is disabled, a parse
 error will result (as if tagged values were not part of the grammar).
 
-If C<allow_tags> is enabled, C<JSON::XS> will look up the C<THAW> method
+If C<allow_tags> is enabled, C<JSON::XL> will look up the C<THAW> method
 of the package/classname used during serialisation (it will not attempt
 to load the package as a Perl module). If there is no such method, the
 decoding will fail with an error.
@@ -1342,7 +1342,7 @@ JSON strings, but are not allowed in ECMAscript string literals, so the
 following Perl fragment will not output something that can be guaranteed
 to be parsable by javascript's C<eval>:
 
-   use JSON::XS;
+   use JSON::XL;
 
    print encode_json [chr 0x2028];
 
@@ -1353,16 +1353,16 @@ F<json2.js> parser).
 If this is not an option, you can, as a stop-gap measure, simply encode to
 ASCII-only JSON:
 
-   use JSON::XS;
+   use JSON::XL;
 
-   print JSON::XS->new->ascii->encode ([chr 0x2028]);
+   print JSON::XL->new->ascii->encode ([chr 0x2028]);
 
 Note that this will enlarge the resulting JSON text quite a bit if you
 have many non-ASCII characters. You might be tempted to run some regexes
 to only escape U+2028 and U+2029, e.g.:
 
    # DO NOT USE THIS!
-   my $json = JSON::XS->new->utf8->encode ([chr 0x2028]);
+   my $json = JSON::XL->new->utf8->encode ([chr 0x2028]);
    $json =~ s/\xe2\x80\xa8/\\u2028/g; # escape U+2028
    $json =~ s/\xe2\x80\xa9/\\u2029/g; # escape U+2029
    print $json;
@@ -1393,13 +1393,13 @@ If you know of other incompatibilities, please let me know.
 You often hear that JSON is a subset of YAML. This is, however, a mass
 hysteria(*) and very far from the truth (as of the time of this writing),
 so let me state it clearly: I<in general, there is no way to configure
-JSON::XS to output a data structure as valid YAML> that works in all
+JSON::XL to output a data structure as valid YAML> that works in all
 cases.
 
-If you really must use JSON::XS to generate YAML, you should use this
+If you really must use JSON::XL to generate YAML, you should use this
 algorithm (subject to change in future versions):
 
-   my $to_yaml = JSON::XS->new->utf8->space_after (1);
+   my $to_yaml = JSON::XL->new->utf8->space_after (1);
    my $yaml = $to_yaml->encode ($ref) . "\n";
 
 This will I<usually> generate JSON texts that also parse as valid
@@ -1409,7 +1409,7 @@ unicode character escape syntax, so you should make sure that your hash
 keys are noticeably shorter than the 1024 "stream characters" YAML allows
 and that you do not have characters with codepoint values outside the
 Unicode BMP (basic multilingual page). YAML also does not allow C<\/>
-sequences in strings (which JSON::XS does not I<currently> generate, but
+sequences in strings (which JSON::XL does not I<currently> generate, but
 other JSON generators might).
 
 There might be other incompatibilities that I am not aware of (or the YAML
@@ -1450,9 +1450,9 @@ corrupting userdata is so much easier.
 
 =head2 SPEED
 
-It seems that JSON::XS is surprisingly fast, as shown in the following
+It seems that JSON::XL is surprisingly fast, as shown in the following
 tables. They have been generated with the help of the C<eg/bench> program
-in the JSON::XS distribution, to make it easy to compare on your own
+in the JSON::XL distribution, to make it easy to compare on your own
 system.
 
 First comes a comparison between various modules using
@@ -1463,9 +1463,9 @@ L<http://dist.schmorp.de/misc/json/short.json>).
    "we were just talking"], "id": null, "array":[1,11,234,-5,1e5,1e7,
    1,  0]}
 
-It shows the number of encodes/decodes per second (JSON::XS uses
-the functional interface, while JSON::XS/2 uses the OO interface
-with pretty-printing and hashkey sorting enabled, JSON::XS/3 enables
+It shows the number of encodes/decodes per second (JSON::XL uses
+the functional interface, while JSON::XL/2 uses the OO interface
+with pretty-printing and hashkey sorting enabled, JSON::XL/3 enables
 shrink. JSON::DWIW/DS uses the deserialise function, while JSON::DWIW::FJ
 uses the from_json method). Higher is better:
 
@@ -1475,13 +1475,13 @@ uses the from_json method). Higher is better:
    JSON::DWIW/FJ |  86302.551 |  75983.768 |
    JSON::PP      |  15827.562 |   6638.658 |
    JSON::Syck    |  63358.066 |  47662.545 |
-   JSON::XS      | 511500.488 | 511500.488 |
-   JSON::XS/2    | 291271.111 | 388361.481 |
-   JSON::XS/3    | 361577.931 | 361577.931 |
+   JSON::XL      | 511500.488 | 511500.488 |
+   JSON::XL/2    | 291271.111 | 388361.481 |
+   JSON::XL/3    | 361577.931 | 361577.931 |
    Storable      |  66788.280 | 265462.278 |
    --------------+------------+------------+
 
-That is, JSON::XS is almost six times faster than JSON::DWIW on encoding,
+That is, JSON::XL is almost six times faster than JSON::DWIW on encoding,
 about five times faster on decoding, and over thirty to seventy times
 faster than JSON's pure perl implementation. It also compares favourably
 to Storable for small amounts of data.
@@ -1495,17 +1495,17 @@ search API (L<http://dist.schmorp.de/misc/json/long.json>).
    JSON::DWIW/FJ |   1630.249 |   2596.128 |
    JSON::PP      |    400.640 |     62.311 |
    JSON::Syck    |   1481.040 |   1524.869 |
-   JSON::XS      |  20661.596 |   9541.183 |
-   JSON::XS/2    |  10683.403 |   9416.938 |
-   JSON::XS/3    |  20661.596 |   9400.054 |
+   JSON::XL      |  20661.596 |   9541.183 |
+   JSON::XL/2    |  10683.403 |   9416.938 |
+   JSON::XL/3    |  20661.596 |   9400.054 |
    Storable      |  19765.806 |  10000.725 |
    --------------+------------+------------+
 
-Again, JSON::XS leads by far (except for Storable which non-surprisingly
+Again, JSON::XL leads by far (except for Storable which non-surprisingly
 decodes a bit faster).
 
 On large strings containing lots of high Unicode characters, some modules
-(such as JSON::PC) seem to decode faster than JSON::XS, but the result
+(such as JSON::PC) seem to decode faster than JSON::XL, but the result
 will be broken due to missing (or wrong) Unicode handling. Others refuse
 to decode or encode properly, so it was impossible to prepare a fair
 comparison table for that case.
@@ -1525,11 +1525,11 @@ limit the size of JSON texts you accept, or make sure then when your
 resources run out, that's just fine (e.g. by using a separate process that
 can crash safely). The size of a JSON text in octets or characters is
 usually a good indication of the size of the resources required to decode
-it into a Perl structure. While JSON::XS can check the size of the JSON
+it into a Perl structure. While JSON::XL can check the size of the JSON
 text, it might be too late when you already have it in memory, so you
 might want to check the size before you accept the string.
 
-Third, JSON::XS recurses using the C stack when decoding objects and
+Third, JSON::XL recurses using the C stack when decoding objects and
 arrays. The C stack is a limited resource: for instance, on my amd64
 machine with 8MB of stack size I can decode around 180k nested arrays but
 only 14k nested JSON objects (due to perl itself recursing deeply on croak
@@ -1541,12 +1541,12 @@ C<max_depth> method.
 Something else could bomb you, too, that I forgot to think of. In that
 case, you get to keep the pieces. I am always open for hints, though...
 
-Also keep in mind that JSON::XS might leak contents of your Perl data
+Also keep in mind that JSON::XL might leak contents of your Perl data
 structures in its error messages, so when you serialise sensitive
-information you might want to make sure that exceptions thrown by JSON::XS
+information you might want to make sure that exceptions thrown by JSON::XL
 will not end up in front of untrusted eyes.
 
-If you are using JSON::XS to return packets to consumption
+If you are using JSON::XL to return packets to consumption
 by JavaScript scripts in a browser you should have a look at
 L<http://blog.archive.jpsykes.com/47/practical-csrf-and-json-security/> to
 see whether you are vulnerable to some common attack vectors (which really
@@ -1557,7 +1557,7 @@ security right).
 
 =head1 INTEROPERABILITY WITH OTHER MODULES
 
-C<JSON::XS> uses the L<Types::Serialiser> module to provide boolean
+C<JSON::XL> uses the L<Types::Serialiser> module to provide boolean
 constants. That means that the JSON true and false values will be
 comaptible to true and false values of iother modules that do the same,
 such as L<JSON::PP> and L<CBOR::XS>.
@@ -1578,9 +1578,9 @@ process simulations - use fork, it's I<much> faster, cheaper, better).
 Sometimes people avoid the Perl locale support and directly call the
 system's setlocale function with C<LC_ALL>.
 
-This breaks both perl and modules such as JSON::XS, as stringification of
+This breaks both perl and modules such as JSON::XL, as stringification of
 numbers no longer works correctly (e.g. C<$x = 0.1; print "$x"+1> might
-print C<1>, and JSON::XS might output illegal JSON as JSON::XS relies on
+print C<1>, and JSON::XL might output illegal JSON as JSON::XL relies on
 perl to stringify numbers).
 
 The solution is simple: don't call C<setlocale>, or use it for only those
@@ -1609,10 +1609,10 @@ BEGIN {
    *false   = \&Types::Serialiser::false;
    *is_bool = \&Types::Serialiser::is_bool;
 
-   *JSON::XS::Boolean:: = *Types::Serialiser::Boolean::;
+   *JSON::XL::Boolean:: = *Types::Serialiser::Boolean::;
 }
 
-XSLoader::load "JSON::XS", $VERSION;
+XSLoader::load "JSON::XL", $VERSION;
 
 =head1 SEE ALSO
 

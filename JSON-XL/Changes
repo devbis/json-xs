@@ -1,4 +1,4 @@
-Revision history for Perl extension JSON::XS
+Revision history for Perl extension JSON::XL
 
 TODO: maybe detetc and croak on more invalid inputs (e.g. +-inf/nan)
 TODO: maybe avoid the reblessing and better support readonly objects.
@@ -173,13 +173,13 @@ TODO: http://stevehanov.ca/blog/index.php?id=104 compression
           comaptible versions in some later release.
 
 2.0  Tue Dec  4 11:30:46 CET 2007
-	- this is supposed to be the first version of JSON::XS
+	- this is supposed to be the first version of JSON::XL
           compatible with version 2.0+ of the JSON module.
-          Using the JSON module as frontend to JSON::XS should be
-          as fast as using JSON::XS directly, so consider using it
+          Using the JSON module as frontend to JSON::XL should be
+          as fast as using JSON::XL directly, so consider using it
           instead.
 	- added get_* methods for all "simple" options.
-        - make JSON::XS subclassable.
+        - make JSON::XL subclassable.
 
 1.53 Tue Nov 13 23:58:33 CET 2007
 	- minor doc clarifications.
@@ -191,7 +191,7 @@ TODO: http://stevehanov.ca/blog/index.php?id=104 compression
 
 1.51 Sat Oct 13 03:55:56 CEST 2007
 	- encode empty arrays/hashes in a compact way when pretty is enabled.
-	- apparently JSON::XS was used to find some bugs in the
+	- apparently JSON::XL was used to find some bugs in the
           JSON_checker testsuite, so add (the corrected) JSON_checker tests to
           the testsuite.
         - quite a bit of doc updates/extension.
@@ -244,14 +244,14 @@ TODO: http://stevehanov.ca/blog/index.php?id=104 compression
           into a more complex one.
         - work around a bug where perl wrongly claims an integer
           is not an integer.
-        - unbundle JSON::XS::Boolean into own pm file so Storable
+        - unbundle JSON::XL::Boolean into own pm file so Storable
           and similar modules can resolve the overloading when thawing.
 
 1.3  Sun Jun 24 01:55:02 CEST 2007
-        - make JSON::XS::true and false special overloaded objects
+        - make JSON::XL::true and false special overloaded objects
           and return those instead of 1 and 0 for those json atoms
           (JSON::PP compatibility is NOT achieved yet).
-        - add JSON::XS::is_bool predicate to test for those special
+        - add JSON::XL::is_bool predicate to test for those special
           values.
 	- add a reference to
           http://jpsykes.com/47/practical-csrf-and-json-security.
@@ -319,7 +319,7 @@ TODO: http://stevehanov.ca/blog/index.php?id=104 compression
 
 1.0  Thu Mar 29 04:43:34 CEST 2007
 	- the long awaited (by me) 1.0 version.
-        - add \0 (JSON::XS::false) and \1 (JSON::XS::true) mappings to JSON
+        - add \0 (JSON::XL::false) and \1 (JSON::XL::true) mappings to JSON
           true and false.
 	- add some more notes to shrink, as suggested by Alex Efros.
         - improve testsuite.
@@ -331,7 +331,7 @@ TODO: http://stevehanov.ca/blog/index.php?id=104 compression
 	- fix a memleak when decoding hashes.
 	- export jsonToBj and objToJson as aliases
           to to_json and from_json, to reduce incompatibilities
-          between JSON/JSON::PC and JSON::XS. (experimental).
+          between JSON/JSON::PC and JSON::XL. (experimental).
         - implement a maximum nesting depth for both en- and de-coding.
         - added a security considerations sections.
 

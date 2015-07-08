@@ -1,6 +1,6 @@
 =head1 NAME
 
-JSON::XS::Boolean - dummy module providing JSON::XS::Boolean
+JSON::XL::Boolean - dummy module providing JSON::XL::Boolean
 
 =head1 SYNOPSIS
 
@@ -10,15 +10,15 @@ JSON::XS::Boolean - dummy module providing JSON::XS::Boolean
 
 This module exists only to provide overload resolution for Storable and
 similar modules. It's only needed for compatibility with data serialised
-(by other modules such as Storable) that was decoded by JSON::XS versions
+(by other modules such as Storable) that was decoded by JSON::XL versions
 before 3.0.
 
 Since 3.0, JSON::PP::Boolean has replaced it. Support for
-JSON::XS::Boolean will be removed in a future release.
+JSON::XL::Boolean will be removed in a future release.
 
 =cut
 
-use JSON::XS ();
+use JSON::XL ();
 
 1;
 

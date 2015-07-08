@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-json_xs - JSON::XS commandline utility
+json_xs - JSON::XL commandline utility
 
 =head1 SYNOPSIS
 
@@ -134,7 +134,7 @@ Print the tracker list inside a torrent file.
 
    lwp-request http://cpantesters.perl.org/show/JSON-XS.json | json_xs
 
-Fetch the cpan-testers result summary C<JSON::XS> and pretty-print it.
+Fetch the cpan-testers result summary C<JSON::XL> and pretty-print it.
 
 =head1 AUTHOR
 
@@ -148,7 +148,7 @@ use Getopt::Long;
 use Storable ();
 use Encode;
 
-use JSON::XS;
+use JSON::XL;
 
 my $opt_verbose;
 my $opt_from = "json";
@@ -175,7 +175,7 @@ my %F = (
        : /^.\x00.\x00/s    ? "utf-16le"
        :                     "utf-8";
       warn "input text encoding is $enc\n" if $opt_verbose;
-      JSON::XS->new->decode (decode $enc, $_)
+      JSON::XL->new->decode (decode $enc, $_)
    },
    "cbor"          => sub { require CBOR::XS; CBOR::XS::decode_cbor ($_) },
    "storable"      => sub { Storable::thaw $_ },
@@ -191,11 +191,11 @@ my %T = (
    "string"        => sub { $_ },
    "json"          => sub { encode_json $_ },
    "json-utf-8"    => sub { encode_json $_ },
-   "json-pretty"   => sub { JSON::XS->new->utf8->pretty->encode ($_) },
-   "json-utf-16le" => sub { encode "utf-16le", JSON::XS->new->encode ($_) },
-   "json-utf-16be" => sub { encode "utf-16be", JSON::XS->new->encode ($_) },
-   "json-utf-32le" => sub { encode "utf-32le", JSON::XS->new->encode ($_) },
-   "json-utf-32be" => sub { encode "utf-32be", JSON::XS->new->encode ($_) },
+   "json-pretty"   => sub { JSON::XL->new->utf8->pretty->encode ($_) },
+   "json-utf-16le" => sub { encode "utf-16le", JSON::XL->new->encode ($_) },
+   "json-utf-16be" => sub { encode "utf-16be", JSON::XL->new->encode ($_) },
+   "json-utf-32le" => sub { encode "utf-32le", JSON::XL->new->encode ($_) },
+   "json-utf-32be" => sub { encode "utf-32be", JSON::XL->new->encode ($_) },
    "cbor"          => sub { require CBOR::XS; CBOR::XS::encode_cbor ($_) },
    "storable"      => sub { Storable::nfreeze $_ },
    "storable-file" => sub { open my $fh, ">", \my $buf; Storable::nstore_fd $_, $fh; $buf },
