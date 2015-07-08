@@ -3,10 +3,10 @@ Changes
 MANIFEST
 COPYING
 Makefile.PL
-XS.pm
-XS.xs
-XS/Boolean.pm
-bin/json_xs
+XL.pm
+XL.xs
+XL/Boolean.pm
+bin/json_xl
 eg/bench
 t/00_load.t
 t/01_utf8.t
