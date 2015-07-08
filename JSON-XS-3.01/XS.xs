@@ -48,6 +48,7 @@
 #define F_ALLOW_UNKNOWN  0x00002000UL
 #define F_ALLOW_TAGS     0x00004000UL
 #define F_HOOK           0x00080000UL // some hooks exist, so slow-path processing
+#define F_NO_UPGRADE     0x00100000UL
 
 #define F_PRETTY    F_INDENT | F_SPACE_BEFORE | F_SPACE_AFTER
 
@@ -1104,7 +1105,8 @@ decode_str (dec_t *dec)
                 *cur++ = *dec_cur++;
               while (--clen);
 
-              utf8 = 1;
+              if (!(dec->json.flags & F_NO_UPGRADE))
+                utf8 = 1;
             }
           else
             {
@@ -1966,6 +1968,7 @@ void ascii (JSON *self, int enable = 1)
         relaxed         = F_RELAXED
         allow_unknown   = F_ALLOW_UNKNOWN
         allow_tags      = F_ALLOW_TAGS
+        no_upgrade      = F_NO_UPGRADE
 	PPCODE:
 {
         if (enable)
@@ -1992,6 +1995,7 @@ void get_ascii (JSON *self)
         get_relaxed         = F_RELAXED
         get_allow_unknown   = F_ALLOW_UNKNOWN
         get_allow_tags      = F_ALLOW_TAGS
+        get_no_upgrade      = F_NO_UPGRADE
 	PPCODE:
         XPUSHs (boolSV (self->flags & ix));
 
