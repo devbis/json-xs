@@ -57,7 +57,7 @@
 
 #define SHORT_STRING_LEN 16384 // special-case strings of up to this size
 
-#define DECODE_WANTS_OCTETS(json) ((json)->flags & F_UTF8)
+#define DECODE_WANTS_OCTETS(json) ((json)->flags & F_UTF8 || (json)->flags & F_NO_UPGRADE )
 
 #define SB do {
 #define SE } while (0)
@@ -1089,7 +1089,7 @@ decode_str (dec_t *dec)
                     ERR ("illegal backslash escape sequence in string");
                 }
             }
-          else if (expect_true (ch >= 0x20 && ch < 0x80))
+          else if (expect_true (ch >= 0x20 && ch < 0x80 || (dec->json.flags & F_NO_UPGRADE)))
             *cur++ = ch;
           else if (ch >= 0x80)
             {
@@ -1105,8 +1105,7 @@ decode_str (dec_t *dec)
                 *cur++ = *dec_cur++;
               while (--clen);
 
-              if (!(dec->json.flags & F_NO_UPGRADE))
-                utf8 = 1;
+              utf8 = 1;
             }
           else
             {
